@@ -51,6 +51,7 @@ const getById = async (req, res) => {
 const put = async (req, res) => {
     try {
         const id = req.params.id;
+<<<<<<< Updated upstream
         console.log(`Received ID: ${id}`); // הדפסת ה-ID שהתקבל
 
         // if (isNaN(id)) {
@@ -71,6 +72,19 @@ const put = async (req, res) => {
             return res.status(404).send("no in database");
         }
 
+=======
+        if (isNaN(id)) {
+            return res.status(400).send("no valid id");
+        }
+        if (id != req.body.id) {
+            return res.status(400).send("id not match");
+        }
+        let event = await Event.findOne({ _id: id });
+        if (!event) {
+            console.log(event);
+            return res.status(404).send("no in database");
+        }
+>>>>>>> Stashed changes
         await Event.findOneAndUpdate({ _id: id },
             {
                 id: id,
@@ -78,12 +92,19 @@ const put = async (req, res) => {
                 emailProducer: req.body.emailProducer,
                 description: req.body.description,
             });
+<<<<<<< Updated upstream
         
         console.log(`Event updated: ${id}`); // לוג של עדכון האירוע
         return res.status(200).send("updated");
     }
     catch (err) {
         console.log("Error occurred:", err); // לוג במקרה של שגיאה
+=======
+        return res.status(200).send("updated");
+    }
+    catch (err) {
+        console.log(err);
+>>>>>>> Stashed changes
         return res.status(500).send("status 500 : server error");
     }
 }
