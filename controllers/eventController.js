@@ -51,28 +51,6 @@ const getById = async (req, res) => {
 const put = async (req, res) => {
     try {
         const id = req.params.id;
-<<<<<<< Updated upstream
-        console.log(`Received ID: ${id}`); // הדפסת ה-ID שהתקבל
-
-        // if (isNaN(id)) {
-        //     console.log("Invalid ID received"); // לוג במקרה של ID לא תקין
-        //     return res.status(400).send("no valid id");
-        // }
-        console.log(`body: ${req.body}`); // הדפסת הבקשה שהתקבלה
-        if (id != req.body._id) {
-            console.log(`ID mismatch: received ${req.body._id}, expected ${id}`); // לוג במקרה של חוסר התאמה
-            return res.status(400).send("id not match");
-        }
-
-        let event = await Event.findOne({ _id: id });
-        console.log(`Event found: ${event}`); // לוג של האירוע שנמצא
-
-        if (!event) {
-            console.log("No event found in database"); // לוג במקרה שלא נמצא אירוע
-            return res.status(404).send("no in database");
-        }
-
-=======
         if (isNaN(id)) {
             return res.status(400).send("no valid id");
         }
@@ -84,7 +62,7 @@ const put = async (req, res) => {
             console.log(event);
             return res.status(404).send("no in database");
         }
->>>>>>> Stashed changes
+
         await Event.findOneAndUpdate({ _id: id },
             {
                 id: id,
@@ -92,21 +70,17 @@ const put = async (req, res) => {
                 emailProducer: req.body.emailProducer,
                 description: req.body.description,
             });
-<<<<<<< Updated upstream
+
         
         console.log(`Event updated: ${id}`); // לוג של עדכון האירוע
         return res.status(200).send("updated");
     }
     catch (err) {
         console.log("Error occurred:", err); // לוג במקרה של שגיאה
-=======
+
         return res.status(200).send("updated");
     }
-    catch (err) {
-        console.log(err);
->>>>>>> Stashed changes
-        return res.status(500).send("status 500 : server error");
-    }
+    
 }
 
 
