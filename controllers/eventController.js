@@ -1,4 +1,5 @@
 const Event = require('../connection/eventConnection');
+const mongoose = require('mongoose');
 
 const post = async (req, res) => {
     try {
@@ -89,21 +90,47 @@ const put = async (req, res) => {
 }
 
 
+// const deleteEvent = async (req, res) => {
+//     console.log("========delet event====================================")
+//     try {
+//         const id = parseInt(req.params.id);
+//         if (isNaN(id)) {
+//             return res.status(400).send("no valid id");
+//         }
+//         const event = await Event.findOne({ _id: id });
+//         if (!event) {
+//             return res.status(404).send("no in database");
+//         }
+//         await Event.deleteOne({ _id: id });
+//         return res.status(204).send("deleted");
+//     }
+//     catch (err) {
+//         console.log(err);
+//         return res.status(500).send("status 500 : server error");
+//     }
+// }
 const deleteEvent = async (req, res) => {
+    console.log("========delet event====================================");
+    console.log("Received request to delete event with ID:", req.params.id);
+    
     try {
-        const id = parseInt(req.params.id);
-        if (isNaN(id)) {
+        const id = req.params.id; // אין צורך להמיר למספר
+        if (!mongoose.Types.ObjectId.isValid(id)) { // בדוק אם המזהה תקין
+            console.log("Invalid ID format:", id);
             return res.status(400).send("no valid id");
         }
+        
         const event = await Event.findOne({ _id: id });
         if (!event) {
+            console.log("No event found in database for ID:", id);
             return res.status(404).send("no in database");
         }
+        
         await Event.deleteOne({ _id: id });
+        console.log(`Event with ID ${id} deleted successfully.`);
         return res.status(204).send("deleted");
-    }
-    catch (err) {
-        console.log(err);
+    } catch (err) {
+        console.error("Error deleting event:", err); // השתמש ב-console.error להדפסת שגיאות
         return res.status(500).send("status 500 : server error");
     }
 }
