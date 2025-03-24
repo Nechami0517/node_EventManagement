@@ -8,7 +8,7 @@ const EventSchema = new mongoose.Schema({
     //     type: Number,
     //     required: true
     // },
-    producerId: {
+    emailProducer: {
         type: String,
         required: true
     },

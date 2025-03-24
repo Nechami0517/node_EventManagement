@@ -1,129 +1,111 @@
 const Event = require('../connection/eventConnection');
 
-
 const post = async (req, res) => {
     try {
-
-        // if (req.body.id) {
-        //     res.send(400).send("id not match");
-        //     return;
-        // }
-        // const events = await Event.find({});
-
-        // let event = await Event.findOne({ id: id });
-        // if (event) {
-        //     res.status(404).send("already in database");
-        //     return;
-        // }
         let event = await Event.create({
-            //id: id,
             name: req.body.name,
-            producerId: req.body.producerId,
+            emailProducer: req.body.emailProducer,
             price: req.body.price,
             description: req.body.description
         });
         await event.save();
-        res.status(201).send("created");
+        return res.status(201).send("created");
     }
     catch (err) {
         console.log(err);
-        res.status(500).send("status 500 : server error");
+        return res.status(500).send("status 500 : server error");
     }
 }
-
 
 const get = async (req, res) => {
     try {
         const events = await Event.find({});
         if (!events) {
-            res.status(404);
-            res.send("no events");
-            return;
+            return res.status(404).send("no events");
         }
-        res.status(200);
-        res.send(events);
+        return res.status(200).send(events);
     }
     catch (err) {
         console.log(err);
-
-        res.status(500).send("status 500 : server error");
+        return res.status(500).send("status 500 : server error");
     }
 }
 
 const getById = async (req, res) => {
-
     try {
         const id = parseInt(req.params.id);
         if (isNaN(id)) {
-            res.status(400).send("no valid id");
-            return;
+            return res.status(400).send("no valid id");
         }
-        const event = await Event.findOne({ id: id });
+        const event = await Event.findOne({ _id: id });
         if (!event) {
-            res.status(404).send("no in database");
-            return;
+            return res.status(404).send("no in database");
         }
-        res.status(200).send(event);
+        return res.status(200).send(event);
     }
     catch (err) {
         console.log(err);
-        res.send(500).send("status 500 : server error");
+        return res.status(500).send("status 500 : server error");
     }
 }
-
 const put = async (req, res) => {
     try {
-        const id = parseInt(req.params.id);
-        if (isNaN(id)) {
-            res.status(400).send("no valid id");
-            return;
+        const id = req.params.id;
+        console.log(`Received ID: ${id}`); // הדפסת ה-ID שהתקבל
+
+        // if (isNaN(id)) {
+        //     console.log("Invalid ID received"); // לוג במקרה של ID לא תקין
+        //     return res.status(400).send("no valid id");
+        // }
+        console.log(`body: ${req.body}`); // הדפסת הבקשה שהתקבלה
+        if (id != req.body._id) {
+            console.log(`ID mismatch: received ${req.body._id}, expected ${id}`); // לוג במקרה של חוסר התאמה
+            return res.status(400).send("id not match");
         }
-        if (id != req.body.id) {
-            res.send(400).send("id not match");
-            return;
-        }
-        let event = await Event.findOne({ id: id });
+
+        let event = await Event.findOne({ _id: id });
+        console.log(`Event found: ${event}`); // לוג של האירוע שנמצא
+
         if (!event) {
-            console.log(event);
-            res.status(404).send("no in database");
-            return;
+            console.log("No event found in database"); // לוג במקרה שלא נמצא אירוע
+            return res.status(404).send("no in database");
         }
-        await Event.findOneAndUpdate({ id: id },
+
+        await Event.findOneAndUpdate({ _id: id },
             {
                 id: id,
                 name: req.body.name,
-                producerId: req.body.producerId,
+                emailProducer: req.body.emailProducer,
                 description: req.body.description,
             });
-        res.status(200).send("updated");
+        
+        console.log(`Event updated: ${id}`); // לוג של עדכון האירוע
+        return res.status(200).send("updated");
     }
     catch (err) {
-        console.log(err);
-        res.status(500).send("status 500 : server error");
+        console.log("Error occurred:", err); // לוג במקרה של שגיאה
+        return res.status(500).send("status 500 : server error");
     }
 }
+
 
 const deleteEvent = async (req, res) => {
     try {
         const id = parseInt(req.params.id);
         if (isNaN(id)) {
-            res.status(400).send("no valid id");
-            return;
+            return res.status(400).send("no valid id");
         }
-        const event = await Event.findOne({ id: id });
+        const event = await Event.findOne({ _id: id });
         if (!event) {
-            res.status(404).send("no in database");
-            return;
+            return res.status(404).send("no in database");
         }
-        await Event.deleteOne({ id: id });
-        res.status(204).send("deleted");
+        await Event.deleteOne({ _id: id });
+        return res.status(204).send("deleted");
     }
     catch (err) {
         console.log(err);
-        res.status(500).send("status 500 : server error");
+        return res.status(500).send("status 500 : server error");
     }
 }
-
-
 
 module.exports = { get, getById, put, post, deleteEvent };
