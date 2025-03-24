@@ -8,10 +8,10 @@ const { get,
 
     
 router.get('/Producer', get);
-router.get('/Producer/:id', getByEmail);
-router.put('/Producer/:id', put);
+router.get('/Producer/:email', getByEmail);
+router.put('/Producer/:email', put);
 router.post('/Producer',  post);
-router.delete('/Producer/:id', deleteProducer);
+router.delete('/Producer/:email', deleteProducer);
 
 
 module.exports = router;

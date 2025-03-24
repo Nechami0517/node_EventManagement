@@ -45,7 +45,7 @@ const getByEmail = async (req, res) => {
 
 const post = async (req, res) => {
     try {
-         const email = parseInt(req.body.email);
+        const email = parseInt(req.body.email);
         // if (!id) {
         //     res.status(400);
         //     res.send("Id is missing");
@@ -84,18 +84,25 @@ const post = async (req, res) => {
 
 const put = async (req, res) => {
     try {
-        const id = parseInt(req.params.id);
-        if (!id) {
+
+        const email = req.params.email;
+        console.log(email);
+        console.log(req.params);
+
+        if (!email) {
+
             req.status(400);
             res.send("Id is missing");
             return;
         }
-        if (id != req.body.id) {
+        if (email != req.body.email) {
+
             res.status(400);
             res.send("Id is not match");
             return;
         }
-        const producer = await Producer.findOneAndUpdate({ id: id }, {
+
+        const producer = await Producer.findOneAndUpdate({ email: email }, {
             name: req.body.name,
             email: req.body.email,
             phone: req.body.phone,
@@ -106,6 +113,8 @@ const put = async (req, res) => {
             res.send("Producer not found");
             return;
         }
+        console.log("put3");
+
         res.status(200);
         res.send(producer);
     }
