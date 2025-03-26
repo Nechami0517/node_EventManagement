@@ -19,7 +19,7 @@ const logMiddleware = (req, res, next) => {
 };
 
 // Apply middleware to all routes
-router.use(logMiddleware);
+//router.use(logMiddleware);
 
 router.get("/event", get);
 router.get("/event/:id", getById);

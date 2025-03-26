@@ -3,7 +3,6 @@ const Producer = require('../connection/producerConnection');
 const get = async (req, res) => {
     try {
         const producers = await Producer.find({});
-        console.log(producers + "///////////////////////////////////////////");
         if (!producers) {
             return res.status(404).send("Producer not found");
         }
@@ -33,9 +32,11 @@ const getByEmail = async (req, res) => {
 
 const post = async (req, res) => {
     try {
+        console.log("------------------1-----------------------------");
         const email = req.body.email;
         const producer = await Producer.findOne({ email: email });
         if (producer) {
+            console.log(producer+"-------------------2-----------------------------");
             return res.status(404).send("Producer already exist");
         }
         const newProducer = await Producer.create({
@@ -44,10 +45,16 @@ const post = async (req, res) => {
             phone: req.body.phone,
             description: req.body.descreption
         });
+        console.log("---------------------3---------------------------");
+
         await newProducer.save();
+        console.log("--------------------4----------------------------");
+
         return res.status(201).send(newProducer);
     }
     catch {
+        console.log("--------------------5----------------------------");
+
         return res.status(500).send("Error");
     }
 }

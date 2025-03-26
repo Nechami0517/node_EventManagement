@@ -1,8 +1,5 @@
 const Event = require('../connection/eventConnection');
-<<<<<<< Updated upstream
 const mongoose = require('mongoose');
-=======
->>>>>>> Stashed changes
 
 const post = async (req, res) => {
     try {
@@ -55,21 +52,26 @@ const getById = async (req, res) => {
 const put = async (req, res) => {
     try {
         const id = req.params.id;
-        if (isNaN(id)) {
-            return res.status(400).send("no valid id");
-        }
-        if (id != req.body.id) {
+        console.log(`Received ID: ${id}`); // הדפסת ה-ID שהתקבל
+
+        // if (isNaN(id)) {
+        //     console.log("Invalid ID received"); // לוג במקרה של ID לא תקין
+        //     return res.status(400).send("no valid id");
+        // }
+        console.log(`body: ${req.body}`); // הדפסת הבקשה שהתקבלה
+        if (id != req.body._id) {
+            console.log(`ID mismatch: received ${req.body._id}, expected ${id}`); // לוג במקרה של חוסר התאמה
             return res.status(400).send("id not match");
         }
+
         let event = await Event.findOne({ _id: id });
+        console.log(`Event found: ${event}`); // לוג של האירוע שנמצא
+
         if (!event) {
-            console.log(event);
+            console.log("No event found in database"); // לוג במקרה שלא נמצא אירוע
             return res.status(404).send("no in database");
         }
-<<<<<<< Updated upstream
 
-=======
->>>>>>> Stashed changes
         await Event.findOneAndUpdate({ _id: id },
             {
                 id: id,
@@ -77,25 +79,14 @@ const put = async (req, res) => {
                 emailProducer: req.body.emailProducer,
                 description: req.body.description,
             });
-<<<<<<< Updated upstream
-
         
         console.log(`Event updated: ${id}`); // לוג של עדכון האירוע
         return res.status(200).send("updated");
     }
     catch (err) {
         console.log("Error occurred:", err); // לוג במקרה של שגיאה
-
-        return res.status(200).send("updated");
-=======
-        return res.status(200).send("updated");
-    }
-    catch (err) {
-        console.log(err);
         return res.status(500).send("status 500 : server error");
->>>>>>> Stashed changes
     }
-    
 }
 
 
@@ -123,7 +114,6 @@ const deleteEvent = async (req, res) => {
     console.log("Received request to delete event with ID:", req.params.id);
     
     try {
-<<<<<<< Updated upstream
         const id = req.params.id; // אין צורך להמיר למספר
         if (!mongoose.Types.ObjectId.isValid(id)) { // בדוק אם המזהה תקין
             console.log("Invalid ID format:", id);
@@ -141,21 +131,6 @@ const deleteEvent = async (req, res) => {
         return res.status(204).send("deleted");
     } catch (err) {
         console.error("Error deleting event:", err); // השתמש ב-console.error להדפסת שגיאות
-=======
-        const id = parseInt(req.params.id);
-        if (isNaN(id)) {
-            return res.status(400).send("no valid id");
-        }
-        const event = await Event.findOne({ _id: id });
-        if (!event) {
-            return res.status(404).send("no in database");
-        }
-        await Event.deleteOne({ _id: id });
-        return res.status(204).send("deleted");
-    }
-    catch (err) {
-        console.log(err);
->>>>>>> Stashed changes
         return res.status(500).send("status 500 : server error");
     }
 }
